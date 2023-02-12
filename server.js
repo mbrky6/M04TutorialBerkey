@@ -9,11 +9,14 @@ const server = http.createServer((req, res) => {
   switch(req.url) {
     case "/":
       path += "index.html";
+      res.statusCode = 200; // Successful
       break;
     case "/about":
       path += "about.html";
+      res.statusCode = 200; // Successful
       break;
     default:
+      res.statusCode = 404; // Resource not found
       path += "404.html";
       break;
   } // switch(Webpage to access)
