@@ -15,6 +15,12 @@ const server = http.createServer((req, res) => {
       path += "about.html";
       res.statusCode = 200; // Successful
       break;
+    case "/about-me":
+      res.statusCode = 301; // Resource moved permanently
+
+      // Redirect
+      res.setHeader("Location", "/about");
+      break;
     default:
       res.statusCode = 404; // Resource not found
       path += "404.html";
