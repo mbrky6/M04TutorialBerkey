@@ -11,6 +11,7 @@ const server = http.createServer((req, res) => {
     console.log("Hello");
   });
 
+  // Greet once
   greet(); // Called
   greet(); // Not called
 
