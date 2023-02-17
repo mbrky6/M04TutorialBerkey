@@ -1,7 +1,18 @@
 const http = require("http");
 const fs = require("fs");
+const _ = require("lodash");
 const server = http.createServer((req, res) => {
-  console.log(req.url, req.method);
+  // Lodash
+  let num = _.random(0, 20);
+  console.log(num);
+
+  // Function that only gets called once
+  const greet = _.once(() => {
+    console.log("Hello");
+  });
+
+  greet(); // Called
+  greet(); // Not called
 
   res.setHeader("Content-Type", "text/html"); // Response header content type
   
