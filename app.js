@@ -13,8 +13,8 @@ app.listen(3000); // Localhost default
 app.get("/", (req, res) => {
     const blogs = [
         {title: "Mama Mia", snippet: "I-a made a spicy-a meat-aball."},
-        {title: "Mafia", snippet: "I think the mafia is after me. I keep..."},
-        {title: "Best Pizza Recipes", snippet: "Good day, pizza lovers! Here are som..."}
+        {title: "I figured it out!", snippet: "After years of research, I finally know what the deal with airline food is."},
+        {title: "Best Pizza Recipes", snippet: "6 mouthwatering pizzas for any occasion."}
     ];
     res.render("index", {
         title: "Home",
