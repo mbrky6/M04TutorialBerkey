@@ -1,19 +1,62 @@
 const express = require("express");
 const morgan = require("morgan");
+const mongoose = require("mongoose");
+const Blog = require("./models/blog");
 
 // Express app
 const app = express();
+
+// Connect to MongoDB database
+const dbURI = "mongodb+srv://BlogSite:trgyg4eFrDmvAw@nodetutorial.uyarppy.mongodb.net/nodetut?retryWrites=true&w=majority";
+mongoose.set("strictQuery", true);
+mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true})
+    .then((result) => app.listen(3000))
+    .catch((err) => console.log(err));
 
 // Register ViewEngine
 app.set("view engine", "ejs");
 // app.set("views", "folder name"); When the views folder isn't called "views"
 
-// Listen for requests
-app.listen(3000); // Localhost default
-
 // Middleware & static files
 app.use(morgan("dev"));
 app.use(express.static("public"));
+
+// Mongoose & Mongo sandbox routes
+app.get("/add-blog", (req, res) => {
+    const blog = new Blog({
+        title: "Local chef's house burns down",
+        snippet: "He claimed to be making the world's spiciest meatball.",
+        body: "This story is currently developing. Check back again for more updates."
+    });
+
+    blog.save() // Save new instance of Blog() to the database
+        .then((result) => {
+            res.send(result);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+});
+
+app.get("/all-blogs", (req, res) => {
+    Blog.find() // Get all data from the database
+        .then((result) => {
+            res.send(result);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+});
+
+app.get("/single-blog", (req, res) => {
+    Blog.findById("63f54aad19096a62a23a30a5") // Get a single piece of data using its Object ID
+        .then((result) => {
+            res.send(result);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+});
 
 app.get("/", (req, res) => {
     const blogs = [
