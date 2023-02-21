@@ -1,4 +1,5 @@
 const express = require("express");
+const morgan = require("morgan");
 
 // Express app
 const app = express();
@@ -10,6 +11,10 @@ app.set("view engine", "ejs");
 // Listen for requests
 app.listen(3000); // Localhost default
 
+// Middleware & static files
+app.use(morgan("dev"));
+app.use(express.static("public"));
+
 app.get("/", (req, res) => {
     const blogs = [
         {title: "Mama Mia", snippet: "I-a made a spicy-a meat-aball."},
@@ -20,6 +25,11 @@ app.get("/", (req, res) => {
         title: "Home",
         blogs,
     });
+});
+
+app.use((req, res, next) => {
+    console.log("Carrying on...");
+    next(); // Server continues down the document
 });
 
 app.get("/about", (req, res) => {
