@@ -21,53 +21,9 @@ app.set("view engine", "ejs");
 app.use(morgan("dev"));
 app.use(express.static("public"));
 
-// Mongoose & Mongo sandbox routes
-app.get("/add-blog", (req, res) => {
-    const blog = new Blog({
-        title: "Local chef's house burns down",
-        snippet: "He claimed to be making the world's spiciest meatball.",
-        body: "This story is currently developing. Check back again for more updates."
-    });
-
-    blog.save() // Save new instance of Blog() to the database
-        .then((result) => {
-            res.send(result);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-});
-
-app.get("/all-blogs", (req, res) => {
-    Blog.find() // Get all data from the database
-        .then((result) => {
-            res.send(result);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-});
-
-app.get("/single-blog", (req, res) => {
-    Blog.findById("63f54aad19096a62a23a30a5") // Get a single piece of data using its Object ID
-        .then((result) => {
-            res.send(result);
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-});
-
+// Routes
 app.get("/", (req, res) => {
-    const blogs = [
-        {title: "Mama Mia", snippet: "I-a made a spicy-a meat-aball."},
-        {title: "I figured it out!", snippet: "After years of research, I finally know what the deal with airline food is."},
-        {title: "Best Pizza Recipes", snippet: "6 mouthwatering pizzas for any occasion."}
-    ];
-    res.render("index", {
-        title: "Home",
-        blogs,
-    });
+    res.redirect("/blogs");
 });
 
 app.use((req, res, next) => {
@@ -81,6 +37,17 @@ app.get("/about", (req, res) => {
     });
 });
 
+
+// Blog routes
+app.get("/blogs", (req, res) => {
+    Blog.find().sort({createdAt: -1})
+        .then((result) => {
+            res.render("index", {title: "All Blogs", blogs: result})
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+});
 
 app.get("/blogs/create", (req, res) => {
     res.render("create", {
