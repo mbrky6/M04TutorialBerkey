@@ -7,7 +7,7 @@ const Blog = require("./models/blog");
 const app = express();
 
 // Connect to MongoDB database
-const dbURI = "mongodb+srv://BlogSite:trgyg4eFrDmvAw@nodetutorial.uyarppy.mongodb.net/nodetut?retryWrites=true&w=majority";
+const dbURI = "mongodb+srv://[REDACTED]@nodetutorial.uyarppy.mongodb.net/nodetut?retryWrites=true&w=majority";
 mongoose.set("strictQuery", true);
 mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true})
     .then((result) => app.listen(3000))
@@ -19,6 +19,7 @@ app.set("view engine", "ejs");
 
 // Middleware & static files
 app.use(morgan("dev"));
+app.use(express.urlencoded({extended: true}))
 app.use(express.static("public"));
 
 // Routes
@@ -47,6 +48,19 @@ app.get("/blogs", (req, res) => {
         .catch((err) => {
             console.log(err);
         });
+});
+
+app.post("/blogs", (req, res) => {
+    const blog = new Blog(req.body);
+
+    blog.save()
+        .then((result) => {
+            res.redirect("/blogs");
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
 });
 
 app.get("/blogs/create", (req, res) => {
