@@ -1,13 +1,13 @@
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
-const Blog = require("./models/blog");
+const blogRoutes = require("./routes/blogRoutes");
 
 // Express app
 const app = express();
 
 // Connect to MongoDB database
-const dbURI = "mongodb+srv://[REDACTED]@nodetutorial.uyarppy.mongodb.net/nodetut?retryWrites=true&w=majority";
+const dbURI = "mongodb+srv://BlogSite:trgyg4eFrDmvAw@nodetutorial.uyarppy.mongodb.net/nodetut?retryWrites=true&w=majority";
 mongoose.set("strictQuery", true);
 mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true})
     .then((result) => app.listen(3000))
@@ -38,59 +38,8 @@ app.get("/about", (req, res) => {
     });
 });
 
-
-// Blog routes
-app.get("/blogs", (req, res) => {
-    Blog.find().sort({createdAt: -1})
-        .then((result) => {
-            res.render("index", {title: "All Blogs", blogs: result})
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-});
-
-app.post("/blogs", (req, res) => {
-    const blog = new Blog(req.body);
-
-    blog.save()
-        .then((result) => {
-            res.redirect("/blogs");
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-
-});
-
-app.get("/blogs/create", (req, res) => {
-    res.render("create", {
-        title: "Create New Blog"
-    });
-});
-
-app.get("/blogs/:id", (req, res) => {
-    const id = req.params.id;
-    Blog.findById(id)
-        .then((result) => {
-            res.render("details", {blog: result, title: "Blog Details"});
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-});
-
-app.delete("/blogs/:id", (req, res) => {
-    const id = req.params.id;
-    Blog.findByIdAndDelete(id)
-    .then((result) => {
-        res.json({redirect: "/blogs"});
-    })
-    .catch((err) => {
-        console.log(err);
-    });
-});
-
+// Blog Routes (in external file)
+app.use("/blogs", blogRoutes);
 
 // 404 Page
 app.use((req, res) => {
